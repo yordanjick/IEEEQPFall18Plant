@@ -10,8 +10,8 @@ int lightPower = 3; // photoresistor + pin
 // unsigned long currentTime;
 // unsigned long oldTime;
 
-int soilMax = 1000; //max threshold for soil moisture, subject to change
-int soilMin = 700; //min threshold for soil moisture, subject to change
+int soilMax = 500; //max threshold for soil moisture, subject to change
+int soilMin = 300; //min threshold for soil moisture, subject to change
 int maxWaterTime = 5000; // max amt of time(millis) for watering
 int lightThreshold = 70; // trigger threshold from photoresistor
 
@@ -20,8 +20,6 @@ Servo servo;
 int pos = 0;
 
 bool isShaded = false;
-
-bool isSolenoidRunning = false;
 
 void setup() {
   // put your setup code here, to run once:
@@ -40,29 +38,28 @@ void loop() {
   int curMoisture = readSoil();
   // if the solenoid is not running and the moisture is less than the minimum
   // turns on solenoid valve
-  if(!isSolenoidRunning && curMoisture < soilMin)
+  if(curMoisture < soilMin)
   {
-     isSolenoidRunning = true;
      digitalWrite(solenoidPin, HIGH);
+     Serial.println("solenoid on");
      // oldTime = millis(); // reset old time
      // currentTime = oldTime;
   }
 
   // if the solenoid is running and the moisture is greater than the maximum
   // turn off the solenoid valve
-  if(isSolenoidRunning)
+ 
+  // currentTime = millis(); // change current time
+  // set max duration that the solenoid remains open, check if it exceeds it.
+  // unsigned long deltaTime = currentTime - oldTime;
+  // compare if deltaTime exceeds max
+  if(curMoisture >= soilMax)
   {
-    // currentTime = millis(); // change current time
-    // set max duration that the solenoid remains open, check if it exceeds it.
-    // unsigned long deltaTime = currentTime - oldTime;
-    // compare if deltaTime exceeds max
-    if(curMoisture >= soilMax)
-    {
-      // oldTime = currentTime;
-      isSolenoidRunning = false;
-      digitalWrite(solenoidPin, LOW);
-    }
+    // oldTime = currentTime;
+    Serial.println("solenoid off");
+    digitalWrite(solenoidPin, LOW);
   }
+  
 
   int curLight = readLight();
   // put your main code here, to run repeatedly:
