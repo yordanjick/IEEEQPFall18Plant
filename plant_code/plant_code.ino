@@ -7,11 +7,11 @@ int soilPower = 7; // soil moisture + pin
 int lightPin = A3; // photoresistor signal
 int lightPower = 3; // photoresistor + pin
 
-unsigned long currentTime;
-unsigned long oldTime;
+// unsigned long currentTime;
+// unsigned long oldTime;
 
-int soilMax = 900; //max threshold for soil moisture, subject to change
-int soilMin = 800; //min threshold for soil moisture, subject to change
+int soilMax = 1000; //max threshold for soil moisture, subject to change
+int soilMin = 700; //min threshold for soil moisture, subject to change
 int maxWaterTime = 5000; // max amt of time(millis) for watering
 int lightThreshold = 70; // trigger threshold from photoresistor
 
@@ -31,8 +31,8 @@ void setup() {
   servo.attach(9); 
   digitalWrite(soilPower, LOW);
   Serial.begin(9600);
-  oldTime = millis(); // set initial time
-  currentTime = oldTime;
+  // oldTime = millis(); // set initial time
+  // currentTime = oldTime;
 
 }
 
@@ -44,21 +44,21 @@ void loop() {
   {
      isSolenoidRunning = true;
      digitalWrite(solenoidPin, HIGH);
-     oldTime = millis(); // reset old time
-     currentTime = oldTime;
+     // oldTime = millis(); // reset old time
+     // currentTime = oldTime;
   }
 
   // if the solenoid is running and the moisture is greater than the maximum
   // turn off the solenoid valve
   if(isSolenoidRunning)
   {
-    currentTime = millis(); // change current time
+    // currentTime = millis(); // change current time
     // set max duration that the solenoid remains open, check if it exceeds it.
-    unsigned long deltaTime = currentTime - oldTime;
+    // unsigned long deltaTime = currentTime - oldTime;
     // compare if deltaTime exceeds max
-    if(curMoisture >= soilMax || deltaTime >= maxWaterTime)
+    if(curMoisture >= soilMax)
     {
-      oldTime = currentTime;
+      // oldTime = currentTime;
       isSolenoidRunning = false;
       digitalWrite(solenoidPin, LOW);
     }
